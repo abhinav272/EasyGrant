@@ -24,7 +24,6 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
     }
 
 
-
     private fun shouldAskPermission() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 
     private fun shouldAskPermission(context: Context, permission: String): Boolean {
