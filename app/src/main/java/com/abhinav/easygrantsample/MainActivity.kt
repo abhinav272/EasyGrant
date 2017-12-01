@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
+import com.abhinav.easygrant.EasyGrantUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -21,8 +22,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btn_cam_permission.setOnClickListener {
-            askPermission()
+            askPermission2()
         }
+    }
+
+    private fun askPermission2() {
+        EasyGrantUtil.Builder()
+                .withActivity(this)
+                .permissions(arrayOf(Manifest.permission.CAMERA))
+                .seek()
     }
 
     private fun askPermission() {
