@@ -1,2 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.abhinav.easygrant" />
+    package="com.abhinav.easygrant" >
+
+    <application>
+        <activity
+            android:name=".EasyGrantActivity"
+            android:theme="@style/EasyGrant.Theme.Transparent"
+            />
+    </application>
+</manifest>
