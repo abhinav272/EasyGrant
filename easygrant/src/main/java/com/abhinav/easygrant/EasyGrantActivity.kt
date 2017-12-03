@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.ContextThemeWrapper
 import android.util.Log
 import android.view.WindowManager
 
@@ -16,6 +17,8 @@ import android.view.WindowManager
  * Created by abhinav.sharma on 30/11/17.
  */
 class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
+
+    private var customTheme: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +63,7 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
      * @param which not used and can be replaced with _
      * */
     private fun createRationale(permission: String) {
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(ContextThemeWrapper(this, theme))
                 .setMessage("You need to give Permission for $permission")
                 .setPositiveButton("OK", { dialog, which ->
                     getPermission(permission)

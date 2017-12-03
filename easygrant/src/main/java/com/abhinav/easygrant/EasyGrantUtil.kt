@@ -7,7 +7,7 @@ import android.content.Intent
 /**
  * Created by abhinav.sharma on 29/11/17.
  */
-public class EasyGrantUtil(builder: Builder) : GrantCallbacks{
+public class EasyGrantUtil(builder: Builder) : GrantCallbacks {
 
 
     override fun onPermissionRequired() {
@@ -38,7 +38,7 @@ public class EasyGrantUtil(builder: Builder) : GrantCallbacks{
             appContext = context
         }
 
-        fun onPermissionResult(grantedPermissions: Array<String>, deniedPermissions: Array<String>){
+        fun onPermissionResult(grantedPermissions: Array<String>, deniedPermissions: Array<String>) {
 
         }
     }
