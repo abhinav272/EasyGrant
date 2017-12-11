@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                    Log.e("askPermission", "shouldShowRationale")
+                    Log.e("askPermission", "should ShowRationale")
                     AlertDialog.Builder(this)
                             .setMessage("You need to give Cam Permission")
                             .setPositiveButton("OK", { dialog, which ->
