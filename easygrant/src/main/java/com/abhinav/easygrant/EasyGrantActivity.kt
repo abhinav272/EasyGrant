@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ContextThemeWrapper
 import android.util.Log
 import android.view.WindowManager
+import java.util.ArrayList
+import java.util.function.Consumer
 
 /**
  * Created by abhinav.sharma on 30/11/17.
@@ -19,13 +21,29 @@ import android.view.WindowManager
 class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
     private var customTheme: Int = 0
+    private lateinit var permissions: ArrayList<String>
+    private var alreadyGrantedPermissions: ArrayList<String> = ArrayList()
+    private lateinit var alreadyDeniedPermissions: List<String>
+    private var needPermissions: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        seekPermission(this, intent.getStringExtra("permissions"))
+        permissions = intent.getStringArrayListExtra("permissions")
+//        permissions.forEach { seekPermission(this, it) }
+        prepareList()
+        if (needPermissions.size != 0)
+            seekPermission(needPermissions)
+
     }
 
+    private fun prepareList() {
+        for (i in permissions.indices) {
+            if (shouldAskPermission(this, permissions[i]))
+                needPermissions.add(permissions[i])
+            else alreadyGrantedPermissions.add(permissions[i])
+        }
+    }
 
     private fun shouldAskPermission() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 
@@ -36,17 +54,19 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
         return false
     }
 
-    fun seekPermission(context: Context, permission: String) {
-        when {
-            shouldAskPermission(context, permission) -> {
-                when {
-                    ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)
-                    -> createRationale(permission)
-                    else -> getPermission(permission)
-                }
-            }
-            else -> permissionAlreadyGranted(permission)
-        }
+    fun seekPermission(permission: List<String>) {
+//        when {
+//            shouldAskPermission(context, permission) -> {
+//                when {
+//                    ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)
+//                    -> createRationale(permission)
+//                    else -> getPermission(permission)
+//                }
+//            }
+//            else -> permissionAlreadyGranted(permission)
+//        }
+
+        ActivityCompat.requestPermissions(this, permission.toTypedArray(), 1)
     }
 
     private fun permissionAlreadyGranted(permission: String) {
@@ -63,7 +83,7 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
      * @param which not used and can be replaced with _
      * */
     private fun createRationale(permission: String) {
-        AlertDialog.Builder(ContextThemeWrapper(this, theme))
+        AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog)
                 .setMessage("You need to give Permission for $permission")
                 .setPositiveButton("OK", { dialog, which ->
                     getPermission(permission)
