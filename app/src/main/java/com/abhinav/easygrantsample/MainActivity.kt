@@ -13,13 +13,25 @@ import android.util.Log
 import android.widget.Toast
 import com.abhinav.easygrant.EasyGrantUtil
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     val CAM_PERMISSION = 1
+    private lateinit var permissions: ArrayList<String>
+    private lateinit var rationalMessages: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        permissions = ArrayList()
+        rationalMessages = ArrayList()
+        permissions.add(Manifest.permission.CAMERA)
+        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        permissions.add(Manifest.permission.READ_SMS)
+        permissions.add(Manifest.permission.BODY_SENSORS)
+        rationalMessages.add("Need Camera Permission for my use")
+        rationalMessages.add("Need Location group permissions for my use")
         setContentView(R.layout.activity_main)
         btn_cam_permission.setOnClickListener {
             askPermission2()
@@ -29,7 +41,8 @@ class MainActivity : AppCompatActivity() {
     private fun askPermission2() {
         EasyGrantUtil.Builder()
                 .withActivity(this)
-                .permissions(arrayOf(Manifest.permission.CAMERA))
+                .permissions(permissions)
+                .rationalMessageList(rationalMessages)
                 .seek()
     }
 
