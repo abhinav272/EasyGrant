@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
     val CAM_PERMISSION = 1
     private lateinit var permissions: ArrayList<String>
     private lateinit var rationalMessages: ArrayList<String>
+    private lateinit var permissionsList: ArrayList<PermissionRequest>
     private var cameraPermission = PermissionRequest(Manifest.permission.CAMERA,
             "I need camera permission to show you world", 1)
     private var locationPermission = PermissionRequest(Manifest.permission.ACCESS_FINE_LOCATION,
@@ -55,9 +56,12 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
     }
 
     private fun askPermission2() {
+        permissionsList = ArrayList()
+        permissionsList.add(cameraPermission)
+        permissionsList.add(locationPermission)
         EasyGrantUtil.Builder()
                 .withActivity(this)
-                .withPermission(cameraPermission)
+                .withPermissions(permissionsList)
                 .setCallback(this)
                 .seek()
     }
