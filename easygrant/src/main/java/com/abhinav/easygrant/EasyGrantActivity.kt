@@ -63,6 +63,8 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
                 else needPermissions.add(multiplePermissionsRequest[i])
             } else alreadyGrantedPermissions.add(multiplePermissionsRequest[i])
         }
+
+
     }
 
     private fun shouldAskPermission() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
@@ -74,18 +76,7 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
         return false
     }
 
-    fun seekPermission(permission: List<String>) {
-//        when {
-//            shouldAskPermission(context, permission) -> {
-//                when {
-//                    ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)
-//                    -> createRationale(permission)
-//                    else -> getPermission(permission)
-//                }
-//            }
-//            else -> permissionAlreadyGranted(permission)
-//        }
-
+    fun seekMultiplePermissions(permission: List<String>) {
         ActivityCompat.requestPermissions(this, permission.toTypedArray(), 1)
     }
 
