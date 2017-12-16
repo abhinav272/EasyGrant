@@ -64,7 +64,11 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
             } else alreadyGrantedPermissions.add(multiplePermissionsRequest[i])
         }
 
-
+        if (needPermissions.size > 0)
+            seekMultiplePermissions(needPermissions)
+        else {
+            createRationaleForMultiple(rationaleNeededPermissions)
+        }
     }
 
     private fun shouldAskPermission() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
@@ -76,8 +80,10 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
         return false
     }
 
-    fun seekMultiplePermissions(permission: List<String>) {
-        ActivityCompat.requestPermissions(this, permission.toTypedArray(), 1)
+    fun seekMultiplePermissions(multiplePermissionsRequest: ArrayList<PermissionRequest>) {
+        var permissions = ArrayList<String>()
+        multiplePermissionsRequest.forEach { permissions.add(it.permissionName) }
+        ActivityCompat.requestPermissions(this, permissions.toTypedArray(), 2727)
     }
 
     private fun permissionAlreadyGranted(permission: PermissionRequest) {
@@ -102,8 +108,26 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
                 .show()
     }
 
+    private fun createRationaleForMultiple(permissions: ArrayList<PermissionRequest>) {
+        var messages = ""
+        permissions.forEach { messages += it.permissionRationale + "\n" }
+        AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog)
+                .setTitle("Multiple Permissions Needed")
+                .setMessage(messages)
+                .setPositiveButton("OK", { dialog, which ->
+                    seekMultiplePermissions(permissions)
+                })
+                .show()
+    }
+
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            2727 -> {
+                createRationaleForMultiple(rationaleNeededPermissions)
+            }
+        }
         Log.e("RequestResult", "reqCode -> $requestCode , ${permissions[0]}, grantResult -> ${grantResults[0]}")
         finish()
     }

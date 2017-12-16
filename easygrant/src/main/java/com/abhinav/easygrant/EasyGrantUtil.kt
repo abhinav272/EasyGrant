@@ -20,7 +20,7 @@ public class EasyGrantUtil(builder: Builder) {
             appContext = context
         }
 
-        fun onPermissionResult(grantedPermissions: Array<String>, deniedPermissions: Array<String>) {
+        fun onPermissionResult(grantedPermissions: Array<PermissionRequest>, deniedPermissions: Array<PermissionRequest>) {
             callback.onPermissionDenied(deniedPermissions)
             callback.onPermissionGranted(grantedPermissions)
         }
