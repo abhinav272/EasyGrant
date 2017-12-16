@@ -1,7 +1,6 @@
 package com.abhinav.easygrantsample
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
@@ -12,14 +11,31 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
 import com.abhinav.easygrant.EasyGrantUtil
+import com.abhinav.easygrant.GrantCallbacks
+import com.abhinav.easygrant.PermissionRequest
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), GrantCallbacks {
+    override fun onPermissionDenied(deniedPermissions: Array<String>) {
+
+    }
+
+    override fun onPermissionDisabled(disabledPermissions: Array<String>) {
+
+    }
+
+    override fun onPermissionGranted(grantedPermissions: Array<String>) {
+
+    }
 
     val CAM_PERMISSION = 1
     private lateinit var permissions: ArrayList<String>
     private lateinit var rationalMessages: ArrayList<String>
+    private var cameraPermission = PermissionRequest(Manifest.permission.CAMERA,
+            "I need camera permission to show you world", 1)
+    private var locationPermission = PermissionRequest(Manifest.permission.ACCESS_FINE_LOCATION,
+            "I need location permission to find where are you", 2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +57,8 @@ class MainActivity : AppCompatActivity() {
     private fun askPermission2() {
         EasyGrantUtil.Builder()
                 .withActivity(this)
-                .permissions(permissions)
-                .rationalMessageList(rationalMessages)
+                .withPermission(cameraPermission)
+                .setCallback(this)
                 .seek()
     }
 
