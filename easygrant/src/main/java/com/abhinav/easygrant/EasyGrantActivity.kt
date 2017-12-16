@@ -1,6 +1,5 @@
 package com.abhinav.easygrant
 
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -16,43 +15,61 @@ import java.util.ArrayList
  */
 class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private var customTheme: Int = 0
-    private lateinit var permissions: ArrayList<String>
-    private var alreadyGrantedPermissions: ArrayList<String> = ArrayList()
-    private lateinit var alreadyDeniedPermissions: ArrayList<String>
-    private var rationaleNeededPermissions: ArrayList<String> = ArrayList()
-    private var needPermissions: ArrayList<String> = ArrayList()
+    private var alreadyGrantedPermissions: ArrayList<PermissionRequest> = ArrayList()
+    private lateinit var alreadyDeniedPermissions: ArrayList<PermissionRequest>
+    private var rationaleNeededPermissions: ArrayList<PermissionRequest> = ArrayList()
+    private var needPermissions: ArrayList<PermissionRequest> = ArrayList()
 
-    private lateinit var permissionRequest: PermissionRequest
-    private lateinit var multiplePermissionsRequest: ArrayList<PermissionRequest>
+    private var permissionRequest: PermissionRequest? = null
+    private var multiplePermissionsRequest: ArrayList<PermissionRequest>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         permissionRequest = intent.getParcelableExtra("single_permission")
         multiplePermissionsRequest = intent.getParcelableArrayListExtra("multiple_permission")
-        prepareList()
 
-        if (needPermissions.size != 0)
-            seekPermission(needPermissions)
+        if (permissionRequest != null) {
+            seekSinglePermission(permissionRequest!!)
+        }
+
+        if (multiplePermissionsRequest != null)
+            prepareList(multiplePermissionsRequest!!)
 
     }
 
-    private fun prepareList() {
-        for (i in permissions.indices) {
-            if (shouldAskPermission(this, permissions[i])) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]))
-                    rationaleNeededPermissions.add(permissions[i])
-                else needPermissions.add(permissions[i])
-            } else alreadyGrantedPermissions.add(permissions[i])
+    private fun seekSinglePermission(permissionRequest: PermissionRequest) {
+        when {
+            shouldAskPermission(permissionRequest.permissionName) -> {
+                when {
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, permissionRequest.permissionName)
+                    -> createRationale(permissionRequest)
+                    else -> getPermission(permissionRequest.permissionName)
+                }
+            }
+            else -> permissionAlreadyGranted(permissionRequest)
+        }
+    }
+
+    private fun prepareList(multiplePermissionsRequest: ArrayList<PermissionRequest>) {
+//        rationaleNeededPermissions.clear()
+//        needPermissions.clear()
+//        alreadyGrantedPermissions.clear()
+
+        for (i in multiplePermissionsRequest.indices) {
+            if (shouldAskPermission(multiplePermissionsRequest[i].permissionName)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, multiplePermissionsRequest[i].permissionName))
+                    rationaleNeededPermissions.add(multiplePermissionsRequest[i])
+                else needPermissions.add(multiplePermissionsRequest[i])
+            } else alreadyGrantedPermissions.add(multiplePermissionsRequest[i])
         }
     }
 
     private fun shouldAskPermission() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 
-    private fun shouldAskPermission(context: Context, permission: String): Boolean {
+    private fun shouldAskPermission(permission: String): Boolean {
         if (shouldAskPermission()) {
-            return ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED
+            return ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED
         }
         return false
     }
@@ -72,8 +89,8 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
         ActivityCompat.requestPermissions(this, permission.toTypedArray(), 1)
     }
 
-    private fun permissionAlreadyGranted(permission: String) {
-        Log.e("alreadygrantedfor", "$permission")
+    private fun permissionAlreadyGranted(permission: PermissionRequest) {
+        Log.e("alreadygrantedfor", permission.permissionName)
         finish()
     }
 
@@ -85,11 +102,11 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
      * @param dialog not used and can be replaced with _
      * @param which not used and can be replaced with _
      * */
-    private fun createRationale(permission: String) {
+    private fun createRationale(permission: PermissionRequest) {
         AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog)
-                .setMessage("You need to give Permission for $permission")
+                .setMessage(permission.permissionRationale)
                 .setPositiveButton("OK", { dialog, which ->
-                    getPermission(permission)
+                    getPermission(permission.permissionName)
                 })
                 .show()
     }
