@@ -1,7 +1,5 @@
 package com.abhinav.easygrant
 
-import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -9,11 +7,9 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ContextThemeWrapper
 import android.util.Log
 import android.view.WindowManager
 import java.util.ArrayList
-import java.util.function.Consumer
 
 /**
  * Created by abhinav.sharma on 30/11/17.
@@ -23,15 +19,20 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
     private var customTheme: Int = 0
     private lateinit var permissions: ArrayList<String>
     private var alreadyGrantedPermissions: ArrayList<String> = ArrayList()
-    private lateinit var alreadyDeniedPermissions: List<String>
+    private lateinit var alreadyDeniedPermissions: ArrayList<String>
+    private var rationaleNeededPermissions: ArrayList<String> = ArrayList()
     private var needPermissions: ArrayList<String> = ArrayList()
+
+    private lateinit var permissionRequest: PermissionRequest
+    private lateinit var multiplePermissionsRequest: ArrayList<PermissionRequest>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        permissions = intent.getStringArrayListExtra("permissions")
-//        permissions.forEach { seekPermission(this, it) }
+        permissionRequest = intent.getParcelableExtra("single_permission")
+        multiplePermissionsRequest = intent.getParcelableArrayListExtra("multiple_permission")
         prepareList()
+
         if (needPermissions.size != 0)
             seekPermission(needPermissions)
 
@@ -39,9 +40,11 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
 
     private fun prepareList() {
         for (i in permissions.indices) {
-            if (shouldAskPermission(this, permissions[i]))
-                needPermissions.add(permissions[i])
-            else alreadyGrantedPermissions.add(permissions[i])
+            if (shouldAskPermission(this, permissions[i])) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]))
+                    rationaleNeededPermissions.add(permissions[i])
+                else needPermissions.add(permissions[i])
+            } else alreadyGrantedPermissions.add(permissions[i])
         }
     }
 
