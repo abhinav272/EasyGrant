@@ -17,17 +17,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(), GrantCallbacks {
-    override fun onPermissionDenied(deniedPermissions: Array<String>) {
+    override fun onPermissionDenied(deniedPermissions: Array<PermissionRequest>) {
 
     }
 
-    override fun onPermissionDisabled(disabledPermissions: Array<String>) {
+    override fun onPermissionDisabled(disabledPermissions: Array<PermissionRequest>) {
 
     }
 
-    override fun onPermissionGranted(grantedPermissions: Array<String>) {
+    override fun onPermissionGranted(grantedPermissions: Array<PermissionRequest>) {
 
     }
+
 
     val CAM_PERMISSION = 1
     private lateinit var permissions: ArrayList<String>
