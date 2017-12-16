@@ -1,32 +1,23 @@
 package com.abhinav.easygrant
 
+import java.security.Permissions
+
 /**
  * Created by abhinav.sharma on 29/11/17.
  */
 public interface GrantCallbacks {
     /**
-     * Ask permission on this Callback
-     * */
-    fun onPermissionRequired()
-
-    /**
      * Show appropriate message on this Callback - permission denied
      * */
-    fun onPermissionDenied()
+    fun onPermissionDenied(deniedPermissions: Array<String>)
 
     /**
      * Permission denied and Never show again checked
      * */
-    fun onPermissionDisabled()
+    fun onPermissionDisabled(disabledPermissions: Array<String>)
 
     /**
      * Permission granted on this Callback - do your stuff
      * */
-    fun onPermissionGranted()
-
-    /**
-     * Rationale needed on this Callback - show explanation
-     * Set up Rationale dialog why this permission is required
-     * */
-    fun onRationaleNeeded()
+    fun onPermissionGranted(grantedPermissions: Array<String>)
 }
