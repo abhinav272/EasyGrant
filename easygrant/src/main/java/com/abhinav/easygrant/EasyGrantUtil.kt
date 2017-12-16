@@ -3,6 +3,7 @@ package com.abhinav.easygrant
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import com.abhinav.easygrant.exception.IllegalEasyGrantBuilderException
 import java.util.ArrayList
 
 /**
@@ -27,18 +28,22 @@ public class EasyGrantUtil(builder: Builder) {
 
     init {
         val intent = Intent(builder.activity, EasyGrantActivity::class.java)
-        intent.putParcelableArrayListExtra("multiple_permission", builder.permissionsRequest)
-        intent.putExtra("single_permission", builder.permissionRequest)
-        callback = builder.callback
-        builder.activity.startActivity(intent)
+        if (builder.permissionsRequest?.size == 1 && builder.permissionRequest == null)
+            intent.putExtra("single_permission", builder.permissionsRequest!![0])
+        if (builder.permissionRequest!=null)
+            intent.putExtra("single_permission", builder.permissionRequest)
+        if (builder.permissionsRequest != null && builder.permissionsRequest!!.size > 1)
+            intent.putParcelableArrayListExtra("multiple_permission", builder.permissionsRequest)
+        callback = builder.callback!!
+        builder.activity?.startActivity(intent)
     }
 
     class Builder {
 
-        internal lateinit var activity: Activity
-        internal lateinit var permissionRequest: PermissionRequest
-        internal lateinit var permissionsRequest: ArrayList<PermissionRequest>
-        internal lateinit var callback: GrantCallbacks
+        internal var activity: Activity? = null
+        internal var permissionRequest: PermissionRequest? = null
+        internal var permissionsRequest: ArrayList<PermissionRequest>? = null
+        internal var callback: GrantCallbacks? = null
 
         internal lateinit var rationalMessages: ArrayList<String>
 
@@ -57,12 +62,21 @@ public class EasyGrantUtil(builder: Builder) {
             return this
         }
 
-        fun setCallback(callback: GrantCallbacks): Builder{
+        fun setCallback(callback: GrantCallbacks): Builder {
             this.callback = callback
             return this
         }
 
-        fun seek(): EasyGrantUtil = EasyGrantUtil(this)
+        fun seek(): EasyGrantUtil {
+            if (activity == null)
+                throw IllegalEasyGrantBuilderException("Activity not set in builder")
+            else if (callback == null)
+                throw IllegalEasyGrantBuilderException("Callbacks not set in builder")
+            else if (permissionRequest == null && permissionsRequest == null)
+                throw IllegalEasyGrantBuilderException("No Permissions added in builder")
+
+            return EasyGrantUtil(this)
+        }
 
     }
 
