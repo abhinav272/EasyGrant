@@ -16,12 +16,14 @@ import java.util.ArrayList
 class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
     private var alreadyGrantedPermissions: ArrayList<PermissionRequest> = ArrayList()
-    private lateinit var alreadyDeniedPermissions: ArrayList<PermissionRequest>
+    private var alreadyDeniedPermissions: ArrayList<PermissionRequest> = ArrayList()
+    private var disabledPermissions: ArrayList<PermissionRequest> = ArrayList()
     private var rationaleNeededPermissions: ArrayList<PermissionRequest> = ArrayList()
     private var needPermissions: ArrayList<PermissionRequest> = ArrayList()
 
     private var permissionRequest: PermissionRequest? = null
     private var multiplePermissionsRequest: ArrayList<PermissionRequest>? = null
+    private var permissionMap: HashMap<String, PermissionRequest> = HashMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,7 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
 
         if (permissionRequest != null) {
             seekSinglePermission(permissionRequest!!)
+            permissionMap.put(permissionRequest!!.permissionName, permissionRequest!!)
         }
 
         if (multiplePermissionsRequest != null)
@@ -57,6 +60,7 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
 //        alreadyGrantedPermissions.clear()
 
         for (i in multiplePermissionsRequest.indices) {
+            permissionMap.put(multiplePermissionsRequest[i].permissionName, multiplePermissionsRequest[i])
             if (shouldAskPermission(multiplePermissionsRequest[i].permissionName)) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, multiplePermissionsRequest[i].permissionName))
                     rationaleNeededPermissions.add(multiplePermissionsRequest[i])
@@ -86,8 +90,15 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
         ActivityCompat.requestPermissions(this, permissions.toTypedArray(), 2727)
     }
 
+    fun seekMultiplePermissionsByRationale(multiplePermissionsRequest: ArrayList<PermissionRequest>) {
+        var permissions = ArrayList<String>()
+        multiplePermissionsRequest.forEach { permissions.add(it.permissionName) }
+        ActivityCompat.requestPermissions(this, permissions.toTypedArray(), 7272)
+    }
+
     private fun permissionAlreadyGranted(permission: PermissionRequest) {
-        Log.e("alreadygrantedfor", permission.permissionName)
+        alreadyGrantedPermissions.add(permission)
+        EasyGrantUtil.onPermissionResult(alreadyGrantedPermissions, alreadyDeniedPermissions, disabledPermissions)
         finish()
     }
 
@@ -102,7 +113,7 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
     private fun createRationale(permission: PermissionRequest) {
         AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog)
                 .setMessage(permission.permissionRationale)
-                .setPositiveButton("OK", { dialog, which ->
+                .setPositiveButton(android.R.string.ok, { dialog, which ->
                     getPermission(permission.permissionName)
                 })
                 .show()
@@ -115,7 +126,7 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
                 .setTitle("Multiple Permissions Needed")
                 .setMessage(messages)
                 .setPositiveButton("OK", { dialog, which ->
-                    seekMultiplePermissions(permissions)
+                    seekMultiplePermissionsByRationale(permissions)
                 })
                 .show()
     }
@@ -123,17 +134,28 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            2727 -> {
-                createRationaleForMultiple(rationaleNeededPermissions)
+        for (i in permissions.indices) {
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+                alreadyGrantedPermissions.add(permissionMap[permissions[i]]!!)
+            else {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]))
+                    disabledPermissions.add(permissionMap[permissions[i]]!!)
+                else alreadyDeniedPermissions.add(permissionMap[permissions[i]]!!)
             }
         }
-        Log.e("RequestResult", "reqCode -> $requestCode , ${permissions[0]}, grantResult -> ${grantResults[0]}")
-        finish()
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e("PermissionActivity", "Destroy")
+        when (requestCode) {
+            2727 -> {
+                EasyGrantUtil.onPermissionResult(alreadyGrantedPermissions, alreadyDeniedPermissions, disabledPermissions)
+                if (rationaleNeededPermissions.size > 0)
+                    createRationaleForMultiple(rationaleNeededPermissions)
+                else finish()
+            }
+
+            else -> {
+                EasyGrantUtil.onPermissionResult(alreadyGrantedPermissions, alreadyDeniedPermissions, disabledPermissions)
+                finish()
+            }
+        }
     }
 }
