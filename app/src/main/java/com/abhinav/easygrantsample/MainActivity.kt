@@ -55,12 +55,49 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
         rationalMessages.add("Need Camera Permission for my use")
         rationalMessages.add("Need Location group permissions for my use")
         setContentView(R.layout.activity_main)
+
         btn_cam_permission.setOnClickListener {
-            askPermission2()
+            askCamPermission()
+        }
+
+        btn_all_permission.setOnClickListener {
+            askPermissionAll()
+        }
+
+        btn_location_permission.setOnClickListener {
+            askLocationPermission()
+        }
+
+        btn_sms_permission.setOnClickListener {
+            askSMSPermission()
         }
     }
 
-    private fun askPermission2() {
+    private fun askCamPermission() {
+        EasyGrantUtil.Builder()
+                .withActivity(this)
+                .withPermission(cameraPermission)
+                .setCallback(this)
+                .seek()
+    }
+
+    private fun askSMSPermission() {
+        EasyGrantUtil.Builder()
+                .withActivity(this)
+                .withPermission(smsPermission)
+                .setCallback(this)
+                .seek()
+    }
+
+    private fun askLocationPermission() {
+        EasyGrantUtil.Builder()
+                .withActivity(this)
+                .withPermission(locationPermission)
+                .setCallback(this)
+                .seek()
+    }
+
+    private fun askPermissionAll() {
         permissionsList = ArrayList()
         permissionsList.add(cameraPermission)
         permissionsList.add(locationPermission)
