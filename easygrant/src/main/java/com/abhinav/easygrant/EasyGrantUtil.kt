@@ -1,7 +1,6 @@
 package com.abhinav.easygrant
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import com.abhinav.easygrant.exception.IllegalEasyGrantBuilderException
 import java.util.ArrayList
@@ -12,13 +11,7 @@ import java.util.ArrayList
 public class EasyGrantUtil(builder: Builder) {
 
     companion object {
-        private lateinit var appContext: Context
-        private lateinit var easyGrantActivity: EasyGrantActivity
         private lateinit var callback: GrantCallbacks
-
-        fun getInstance(context: Context) {
-            appContext = context
-        }
 
         fun onPermissionResult(grantedPermissions: ArrayList<PermissionRequest>,
                                deniedPermissions: ArrayList<PermissionRequest>,
@@ -41,6 +34,13 @@ public class EasyGrantUtil(builder: Builder) {
         builder.activity?.startActivity(intent)
     }
 
+    /**
+     * Builder for Using EasyGrant
+     * @param activity -- mandatory
+     * @param callback -- mandatory
+     * @throws IllegalEasyGrantBuilderException if activity or callbacks not set or permissions
+     * not added.
+     * */
     class Builder {
 
         internal var activity: Activity? = null
