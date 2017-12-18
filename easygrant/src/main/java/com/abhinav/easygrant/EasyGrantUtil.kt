@@ -20,9 +20,12 @@ public class EasyGrantUtil(builder: Builder) {
             appContext = context
         }
 
-        fun onPermissionResult(grantedPermissions: Array<PermissionRequest>, deniedPermissions: Array<PermissionRequest>) {
+        fun onPermissionResult(grantedPermissions: ArrayList<PermissionRequest>,
+                               deniedPermissions: ArrayList<PermissionRequest>,
+                               disabledPermissions: ArrayList<PermissionRequest>) {
             callback.onPermissionDenied(deniedPermissions)
             callback.onPermissionGranted(grantedPermissions)
+            callback.onPermissionDisabled(disabledPermissions)
         }
     }
 
@@ -30,7 +33,7 @@ public class EasyGrantUtil(builder: Builder) {
         val intent = Intent(builder.activity, EasyGrantActivity::class.java)
         if (builder.permissionsRequest?.size == 1 && builder.permissionRequest == null)
             intent.putExtra("single_permission", builder.permissionsRequest!![0])
-        if (builder.permissionRequest!=null)
+        if (builder.permissionRequest != null)
             intent.putExtra("single_permission", builder.permissionRequest)
         if (builder.permissionsRequest != null && builder.permissionsRequest!!.size > 1)
             intent.putParcelableArrayListExtra("multiple_permission", builder.permissionsRequest)
