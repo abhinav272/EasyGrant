@@ -17,16 +17,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(), GrantCallbacks {
-    override fun onPermissionDenied(deniedPermissions: Array<PermissionRequest>) {
-
+    override fun onPermissionDenied(deniedPermissions: ArrayList<PermissionRequest>) {
+        deniedPermissions.forEach { Log.e("denied", it.permissionName) }
     }
 
-    override fun onPermissionDisabled(disabledPermissions: Array<PermissionRequest>) {
-
+    override fun onPermissionDisabled(disabledPermissions: ArrayList<PermissionRequest>) {
+        disabledPermissions.forEach { Log.e("disabled", it.permissionName) }
     }
 
-    override fun onPermissionGranted(grantedPermissions: Array<PermissionRequest>) {
-
+    override fun onPermissionGranted(grantedPermissions: ArrayList<PermissionRequest>) {
+        grantedPermissions.forEach { Log.e("granted", it.permissionName) }
     }
 
 
@@ -38,6 +38,10 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
             "I need camera permission to show you world", 1)
     private var locationPermission = PermissionRequest(Manifest.permission.ACCESS_FINE_LOCATION,
             "I need location permission to find where are you", 2)
+    private var smsPermission = PermissionRequest(Manifest.permission.READ_SMS,
+            "I need SMS permission to read all SMS", 3)
+    private var bodySensorPermission = PermissionRequest(Manifest.permission.BODY_SENSORS,
+            "I need body sensor Permission", 4)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +64,8 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
         permissionsList = ArrayList()
         permissionsList.add(cameraPermission)
         permissionsList.add(locationPermission)
+        permissionsList.add(bodySensorPermission)
+        permissionsList.add(smsPermission)
         EasyGrantUtil.Builder()
                 .withActivity(this)
                 .withPermissions(permissionsList)
