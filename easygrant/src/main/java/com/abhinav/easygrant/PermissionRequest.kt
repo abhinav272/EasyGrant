@@ -6,7 +6,7 @@ import android.os.Parcelable
 /**
  * Created by abhinav.sharma on 15/12/17.
  */
-class PermissionRequest(
+data class PermissionRequest(
         var permissionName: String,
         var permissionRationale: String,
         var permissionId: Int
