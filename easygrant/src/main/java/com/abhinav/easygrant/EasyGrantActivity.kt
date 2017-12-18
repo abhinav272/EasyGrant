@@ -55,10 +55,6 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
     }
 
     private fun prepareList(multiplePermissionsRequest: ArrayList<PermissionRequest>) {
-//        rationaleNeededPermissions.clear()
-//        needPermissions.clear()
-//        alreadyGrantedPermissions.clear()
-
         for (i in multiplePermissionsRequest.indices) {
             permissionMap.put(multiplePermissionsRequest[i].permissionName, multiplePermissionsRequest[i])
             if (shouldAskPermission(multiplePermissionsRequest[i].permissionName)) {
@@ -119,6 +115,10 @@ class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissio
                 .show()
     }
 
+    /**
+     * temporary message creation
+     * todo - refactor this method
+     * */
     private fun createRationaleForMultiple(permissions: ArrayList<PermissionRequest>) {
         var messages = ""
         permissions.forEach { messages += it.permissionRationale + "\n" }
