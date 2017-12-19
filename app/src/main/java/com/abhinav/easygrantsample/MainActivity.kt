@@ -1,16 +1,10 @@
 package com.abhinav.easygrantsample
 
 import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.util.Log
-import android.widget.Toast
-import com.abhinav.easygrant.EasyGrantUtil
+import com.abhinav.easygrant.EasyGrant
 import com.abhinav.easygrant.GrantCallbacks
 import com.abhinav.easygrant.PermissionRequest
 import kotlinx.android.synthetic.main.activity_main.*
@@ -68,7 +62,7 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
      * Sample to use Single Permission
      * */
     private fun askCamPermission() {
-        EasyGrantUtil.Builder()
+        EasyGrant.Builder()
                 .withActivity(this)
                 .withPermission(cameraPermission)
                 .setCallback(this)
@@ -76,7 +70,7 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
     }
 
     private fun askSMSPermission() {
-        EasyGrantUtil.Builder()
+        EasyGrant.Builder()
                 .withActivity(this)
                 .withPermission(smsPermission)
                 .setCallback(this)
@@ -84,7 +78,7 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
     }
 
     private fun askLocationPermission() {
-        EasyGrantUtil.Builder()
+        EasyGrant.Builder()
                 .withActivity(this)
                 .withPermission(locationPermission)
                 .setCallback(this)
@@ -100,7 +94,7 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
         permissionsList.add(locationPermission)
         permissionsList.add(bodySensorPermission)
         permissionsList.add(smsPermission)
-        EasyGrantUtil.Builder()
+        EasyGrant.Builder()
                 .withActivity(this)
                 .withPermissions(permissionsList)
                 .setCallback(this)
