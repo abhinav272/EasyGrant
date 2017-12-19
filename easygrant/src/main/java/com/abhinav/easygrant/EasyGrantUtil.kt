@@ -10,10 +10,10 @@ import java.util.ArrayList
  */
 public class EasyGrantUtil(builder: Builder) {
 
-    companion object {
+    internal companion object {
         private lateinit var callback: GrantCallbacks
 
-        fun onPermissionResult(grantedPermissions: ArrayList<PermissionRequest>,
+        internal fun onPermissionResult(grantedPermissions: ArrayList<PermissionRequest>,
                                deniedPermissions: ArrayList<PermissionRequest>,
                                disabledPermissions: ArrayList<PermissionRequest>) {
             callback.onPermissionDenied(deniedPermissions)

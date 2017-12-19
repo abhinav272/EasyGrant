@@ -13,7 +13,7 @@ import java.util.ArrayList
 /**
  * Created by abhinav.sharma on 30/11/17.
  */
-class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
+internal class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
     private var alreadyGrantedPermissions: ArrayList<PermissionRequest> = ArrayList()
     private var alreadyDeniedPermissions: ArrayList<PermissionRequest> = ArrayList()
