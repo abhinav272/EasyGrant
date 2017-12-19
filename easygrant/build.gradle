@@ -15,7 +15,7 @@ ext {
     gitUrl = 'https://github.com/abhinav272/EasyGrant.git'
     githubRepository= 'abhinav272/EasyGrant'
 
-    libraryVersion = '0.0.1'
+    libraryVersion = '0.0.4'
 
     developerId = 'abhinav272'
     developerName = 'Abhinav Sharma'
