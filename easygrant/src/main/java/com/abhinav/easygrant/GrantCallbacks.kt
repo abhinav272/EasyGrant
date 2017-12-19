@@ -1,12 +1,11 @@
 package com.abhinav.easygrant
 
-import java.security.Permissions
 import java.util.ArrayList
 
 /**
  * Created by abhinav.sharma on 29/11/17.
  */
-public interface GrantCallbacks {
+interface GrantCallbacks {
     /**
      * Show appropriate message on this Callback - permission denied
      * */
