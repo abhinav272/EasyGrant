@@ -1,6 +1,36 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+ext {
+    bintrayRepo = 'EasyGrant'
+    bintrayName = 'easygrant'
+
+    publishedGroupId = 'com.abhinavsharma'
+    libraryName = 'EasyGrant'
+    artifact = 'easygrant'
+
+    libraryDescription = 'Android Library to remove runtime permissions boilerplate code'
+
+    siteUrl = 'https://github.com/abhinav272/EasyGrant'
+    gitUrl = 'https://github.com/abhinav272/EasyGrant.git'
+    githubRepository= 'abhinav272/EasyGrant'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'abhinav272'
+    developerName = 'Abhinav Sharma'
+    developerEmail = 'abhinav.ih@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+// Avoid Kotlin docs error
+tasks.withType(Javadoc) {
+    enabled = false
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
@@ -38,3 +68,6 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+apply from: 'https://raw.githubusercontent.com/abhinav272/jCenter/master/installv.gradle'
+apply from: 'https://raw.githubusercontent.com/abhinav272/jCenter/master/bintrayv.gradle'
