@@ -1,5 +1,8 @@
 # EasyGrant
 
+<img alt="Logo" height="200px" 
+src="https://raw.githubusercontent.com/abhinav272/EasyGrant/master/art/logo.png" />
+
 EasyGrant is yet another Android Library to ease the process of asking Runtime Permissions.
 Quoting Android official site -- Beginning in Android 6.0 (API level 23), users grant permissions to apps
 while the app is running, not when they install the app. This approach streamlines the app install process, 
