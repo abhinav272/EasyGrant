@@ -1,7 +1,7 @@
 # EasyGrant
 
 <img height="200px" 
-src="https://raw.githubusercontent.com/abhinav272/EasyGrant/master/easygrant/src/main/ic_launcher-web.png" />
+src="https://raw.githubusercontent.com/abhinav272/EasyGrant/master/easygrant/src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
 
 EasyGrant is yet another Android Library to ease the process of asking Runtime Permissions.
 Quoting Android official site -- Beginning in Android 6.0 (API level 23), users grant permissions to apps
