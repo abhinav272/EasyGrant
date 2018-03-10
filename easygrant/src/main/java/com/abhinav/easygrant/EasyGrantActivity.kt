@@ -65,8 +65,11 @@ internal class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequest
 
         if (needPermissions.size > 0)
             seekMultiplePermissions(needPermissions)
-        else {
+        else if (rationaleNeededPermissions.size > 0) {
             createRationaleForMultiple(rationaleNeededPermissions)
+        } else {
+            EasyGrantUtil.onPermissionResult(alreadyGrantedPermissions, alreadyDeniedPermissions, disabledPermissions)
+            finish()
         }
     }
 
