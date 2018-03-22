@@ -79,7 +79,7 @@ Include the library in your app level ``build.gradle``
 
 ```groovy
 dependencies{
-    compile 'com.abhinavsharma:easygrant:0.0.4'
+    compile 'com.abhinavsharma:easygrant:0.0.5'
 }
 ```
 
