@@ -2,6 +2,7 @@ package com.abhinav.easygrant
 
 import android.app.Activity
 import android.content.Intent
+import android.support.v4.content.ContextCompat
 import com.abhinav.easygrant.exception.IllegalEasyGrantBuilderException
 import java.util.ArrayList
 
@@ -18,6 +19,7 @@ class EasyGrant(builder: Builder) {
             intent.putExtra("single_permission", builder.permissionRequest)
         if (builder.permissionsRequest != null && builder.permissionsRequest!!.size > 1)
             intent.putParcelableArrayListExtra("multiple_permission", builder.permissionsRequest)
+        intent.putExtra("custom_theme", builder.dialogThemeResId)
         EasyGrantUtil.setCallback(builder.callback!!)
         builder.activity?.startActivity(intent)
     }
@@ -39,6 +41,8 @@ class EasyGrant(builder: Builder) {
             private set
         internal var callback: GrantCallbacks? = null
             private set
+        internal var dialogThemeResId: Int = -1
+            private set
 
         fun withActivity(activity: Activity): Builder {
             this.activity = activity
@@ -57,6 +61,11 @@ class EasyGrant(builder: Builder) {
 
         fun setCallback(callback: GrantCallbacks): Builder {
             this.callback = callback
+            return this
+        }
+
+        fun setDialogTheme(resId: Int): Builder {
+            this.dialogThemeResId = resId
             return this
         }
 

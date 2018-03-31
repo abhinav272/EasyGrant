@@ -1,14 +1,14 @@
 package com.abhinav.easygrantsample
 
 import android.Manifest
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.abhinav.easygrant.EasyGrant
 import com.abhinav.easygrant.GrantCallbacks
 import com.abhinav.easygrant.PermissionRequest
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.ArrayList
+import java.util.*
 
 class MainActivity : AppCompatActivity(), GrantCallbacks {
     override fun onPermissionDenied(deniedPermissions: ArrayList<PermissionRequest>) {
@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity(), GrantCallbacks {
                 .withActivity(this)
                 .withPermission(smsPermission)
                 .setCallback(this)
+                .setDialogTheme(R.style.MyDialogTheme)
                 .seek()
     }
 

@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import java.util.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Created by abhinav.sharma on 30/11/17.
@@ -24,9 +25,12 @@ internal class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequest
     private var multiplePermissionsRequest: ArrayList<PermissionRequest>? = null
     private var permissionMap: HashMap<String, PermissionRequest> = HashMap()
 
+    private var customTheme = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        customTheme = intent.getIntExtra("custom_theme", -1)
         permissionRequest = intent.getParcelableExtra("single_permission")
         multiplePermissionsRequest = intent.getParcelableArrayListExtra("multiple_permission")
 
@@ -109,7 +113,12 @@ internal class EasyGrantActivity : AppCompatActivity(), ActivityCompat.OnRequest
      * @param which not used and can be replaced with _
      * */
     private fun createRationale(permission: PermissionRequest) {
-        AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog)
+        when {
+            customTheme == -1 -> {
+                customTheme = R.style.Theme_AppCompat_Light_Dialog
+            }
+        }
+        AlertDialog.Builder(this, customTheme)
                 .setMessage(permission.permissionRationale)
                 .setPositiveButton(android.R.string.ok, { dialog, which ->
                     getPermission(permission.permissionName)
